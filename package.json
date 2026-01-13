@@ -4,13 +4,16 @@
   "description": "> *Extremism in the pursuit of parallelism is no vice.*",
   "main": "pronto.js",
   "scripts": {
-    "test": "node --test test.js",
-    "test-only": "node --test-only test.js"
+    "test": "node test.js | npx faucet"
   },
   "author": "",
   "license": "ISC",
   "type": "module",
-  "engines" : {
-      "node" : ">=20.0.0"
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "faucet": "^0.0.4",
+    "tape": "^5.9.0"
   }
 }
