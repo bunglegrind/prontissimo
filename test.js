@@ -10,6 +10,8 @@ import process from "node:process";
 import test from "tape";
 import pronto from "./prontissimo.js";
 
+const delay = (d) => (c) => (cb, v) => setTimeout(cb, d, v + c);
+
 function hasThrown(event, message, t) {
     const listener = function (err) {
         if (
@@ -159,7 +161,6 @@ test("parallel", function (t) {
 });
 
 test("race", function (t) {
-    const delay = (d) => (c) => (cb, v) => setTimeout(cb, d, v + c);
     pronto.race([
         delay(10)(1),
         delay(20)(2),
@@ -185,5 +186,19 @@ test("fallback", function (t) {
             t.end();
         },
         0
+    );
+});
+
+test("failing parallel", function (t) {
+    t.plan(2);
+    pronto.parallel([
+        (cb, v) => cb(3, v),
+        delay(30)(3),
+        (cb, ignore) => cb(undefined, "error")
+    ])(
+        function (value, reason) {
+            t.equal(value, undefined);
+            t.equal(reason, "error");
+        }
     );
 });
